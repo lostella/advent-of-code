@@ -1,19 +1,20 @@
 import pathlib
+from itertools import accumulate
 
-def diff_open_close(s):
-    res = 0
-    for c in s:
-        if c == '(':
-            res += 1
-        elif c == ')':
-            res -= 1
-        else:
-            raise ValueError('unrecognized input character')
-    return res
+def to_increment(c):
+    if c == '(':
+        return 1
+    elif c == ')':
+        return -1
+    raise ValueError
 
 if __name__ == "__main__":
     input_path = pathlib.Path(__file__).parent.resolve() / "input"
     with open(input_path) as fp:
         for line in fp:
-            print(diff_open_close(line.strip()))
+            print(sum(map(to_increment, line.strip())))
+            for idx, floor in enumerate(accumulate(sum(map(to_increment, line.strip())))):
+                if floor == -1:
+                    print(idx+1)
+                    break
             break

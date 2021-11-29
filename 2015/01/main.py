@@ -13,7 +13,7 @@ if __name__ == "__main__":
     with open(input_path) as fp:
         for line in fp:
             print(sum(map(to_increment, line.strip())))
-            for idx, floor in enumerate(accumulate(sum(map(to_increment, line.strip())))):
+            for idx, floor in enumerate(accumulate(map(to_increment, line.strip()))):
                 if floor == -1:
                     print(idx+1)
                     break

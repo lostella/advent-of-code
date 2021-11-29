@@ -14,7 +14,7 @@ def paper_needed(dims):
     return 2 * sum(map(prod, combinations(dims, 2))) + prod(smallest_two(dims))
 
 def get_dims(line):
-    map(int, line.strip().split('x'))
+    return list(map(int, line.strip().split('x')))
 
 if __name__ == "__main__":
     input_path = pathlib.Path(__file__).parent.resolve() / "input"

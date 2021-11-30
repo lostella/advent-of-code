@@ -1,33 +1,27 @@
 import pathlib
+import re
 
-def pairs(s):
-    return zip(s[:-1], s[1:])
+double_symbol = r".*(.)\1.*"
+three_vowels = r".*([aeiou].*){3,}"
+forbidden_pair = r".*(ab|cd|pq|xy).*"
+repeating_pair = r".*(..).*\1.*"
+aba = r".*(.).\1.*"
 
-def has_double(s):
-    for a, b in pairs(s):
-        if a == b:
-            return True
-    return False
-
-def count_vowels(s):
-    return len([c for c in s if c in "aeiou"])
-
-def is_good(s):
-    if not has_double(s):
+def isnice1(s):
+    if any(re.match(p, s) is None for p in [double_symbol, three_vowels]):
         return False
-    if count_vowels(s) < 3:
+    if re.match(forbidden_pair, s):
         return False
-    forbidden_pairs = [
-        ("a", "b"),
-        ("c", "d"),
-        ("p", "q"),
-        ("x", "y"),
-    ]
-    if not set(pairs(s)).isdisjoint(forbidden_pairs):
+    return True
+
+def isnice2(s):
+    if any(re.match(p, s) is None for p in [repeating_pair, aba]):
         return False
     return True
 
 if __name__ == "__main__":
     input_path = pathlib.Path(__file__).parent.resolve() / "input"
     with open(input_path) as fp:
-        print(len([line for line in fp if is_good(line.strip())]))
+        print(len(list(filter(isnice1, fp))))
+    with open(input_path) as fp:
+        print(len(list(filter(isnice2, fp))))

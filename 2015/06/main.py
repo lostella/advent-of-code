@@ -1,7 +1,6 @@
 import pathlib
 import re
 from collections import defaultdict
-from itertools import islice
 
 def rectangle_points(tl, br):
     return ((x, y)
@@ -14,14 +13,29 @@ def turnon(d, points):
         d[p] = 1
     return d
 
+def increase(d, points):
+    for p in points:
+        d[p] += 1
+    return d
+
 def turnoff(d, points):
     for p in points:
         d[p] = 0
     return d
 
+def decrease(d, points):
+    for p in points:
+        d[p] = max(0, d[p]-1)
+    return d
+
 def toggle(d, points):
     for p in points:
         d[p] = (d[p] + 1) % 2
+    return d
+
+def increase2(d, points):
+    for p in points:
+        d[p] += 2
     return d
 
 cmd_pattern = r"(turn on|turn off|toggle) (\d+),(\d+) through (\d+),(\d+)"
@@ -36,6 +50,12 @@ opmap = {
     "toggle": toggle,
 }
 
+opmap2 = {
+    "turn on": increase,
+    "turn off": decrease,
+    "toggle": increase2,
+}
+
 if __name__ == "__main__":
     input_path = pathlib.Path(__file__).parent.resolve() / "input"
     with open(input_path) as fp:
@@ -43,4 +63,10 @@ if __name__ == "__main__":
         for line in fp:
             op, tl, br = parsecmd(line)
             d = opmap[op](d, rectangle_points(tl, br))
+        print(sum(d.values()))
+    with open(input_path) as fp:
+        d = defaultdict(lambda: 0)
+        for line in fp:
+            op, tl, br = parsecmd(line)
+            d = opmap2[op](d, rectangle_points(tl, br))
         print(sum(d.values()))

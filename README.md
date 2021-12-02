@@ -15,3 +15,15 @@ Example:
 ```
 python 2015/04/main.py
 ```
+
+## Julia
+
+```
+julia <YEAR>/<DAY>/main.jl
+```
+
+Example:
+
+```
+julia 2021/02/main.jl
+```

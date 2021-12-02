@@ -4,26 +4,16 @@ This repo contains my solutions to the [Advent of Code](https://adventofcode.com
 
 The solutions can be run as follows.
 
-## Python
+### Python
 
-```
-python <YEAR>/<DAY>/main.py
-```
-
-Example:
-
-```
+```sh
+# python <YEAR>/<DAY>/main.py, example:
 python 2015/04/main.py
 ```
 
-## Julia
+### Julia
 
-```
-julia <YEAR>/<DAY>/main.jl
-```
-
-Example:
-
-```
+```sh
+# julia <YEAR>/<DAY>/main.jl, example:
 julia 2021/02/main.jl
 ```

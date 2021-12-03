@@ -1,20 +1,11 @@
-function todecimal(x)
-    s = 0
-    for b in x
-        s = 2 * s + b
-    end
-    return s
-end
+to_decimal(x) = foldl((s, b) -> 2 * s + b, x)
 
-majority_bits(data) = begin
-    _round(T, x) = x == 0.5 ? T(1) : round(T, x)
-    _round.(Int, sum(data) / length(data))
-end
+majority_bits(data) = round.(Int, sum(data) / length(data), Base.Rounding.RoundNearestTiesAway)
 
 function main(input_path)
     data = [[c == '1' for c in line] for line in eachline(input_path)]
     m = majority_bits(data)
-    println(todecimal(m) * todecimal(1 .- m))
+    println(to_decimal(m) * to_decimal(1 .- m))
     data1 = data
     for k in 1:length(data[1])
         m = majority_bits(data1)
@@ -27,7 +18,7 @@ function main(input_path)
         data2 = [d for d in data2 if d[k] == m[k]]
         length(data2) == 1 && break
     end
-    println(todecimal(only(data1)) * todecimal(only(data2)))
+    println(to_decimal(only(data1)) * to_decimal(only(data2)))
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__

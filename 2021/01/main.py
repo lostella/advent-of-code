@@ -1,14 +1,13 @@
 import pathlib
 
-def diff(data):
-    return (b - a for a, b in zip(data,  data[1:]))
+def diff(data, lag=1):
+    return (b - a for a, b in zip(data,  data[lag:]))
 
 def main(input_path):
     with open(input_path) as fp:
         depths = list(map(int, fp))
     print(sum(d > 0 for d in diff(depths)))
-    depths3 = [sum(t) for t in zip(depths, depths[1:], depths[2:])]
-    print(sum(d > 0 for d in diff(depths3)))
+    print(sum(d > 0 for d in diff(depths, lag=3)))
 
 if __name__ == "__main__":
     main(pathlib.Path(__file__).parent.resolve() / "input")

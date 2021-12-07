@@ -7,10 +7,10 @@ end
 
 function main(input_path)
     positions = parse.(Int, split(only(eachline(input_path)), ","))
-    optimal_position = round(Int, median(positions))
+    optimal_position = Int(median(positions))
     println(sum(abs.(positions .- optimal_position)))
     mean_position = mean(positions)
-    println(minimum(quadratic_fuel_cost(positions, t) for t in [round.(Int, floor(mean_position)), round.(Int, ceil(mean_position))]))
+    println(minimum(quadratic_fuel_cost(positions, t) for t in Int.([floor(mean_position), ceil(mean_position)])))
 end
 
 if abspath(PROGRAM_FILE) == @__FILE__

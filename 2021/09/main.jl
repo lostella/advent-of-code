@@ -1,11 +1,7 @@
-function neighbors(idx::CartesianIndex{2}, A::AbstractMatrix)
-    neighbors = CartesianIndex{2}[]
-    idx[1] > 1 && push!(neighbors, CartesianIndex(idx[1]-1, idx[2]))
-    idx[2] > 1 && push!(neighbors, CartesianIndex(idx[1], idx[2]-1))
-    idx[1] < size(A,1) && push!(neighbors, CartesianIndex(idx[1]+1, idx[2]))
-    idx[2] < size(A,2) && push!(neighbors, CartesianIndex(idx[1], idx[2]+1))
-    return neighbors
-end
+neighbors(idx::CartesianIndex{2}, A::AbstractMatrix) = [
+    idx + offset for offset in (CartesianIndex(1, 0), CartesianIndex(-1, 0), CartesianIndex(0, 1), CartesianIndex(0, -1))
+    if idx + offset in CartesianIndices(A)
+]
 
 function find_local_minima(A::AbstractArray{T,N}) where {T,N}
     local_minima = CartesianIndex{N}[]

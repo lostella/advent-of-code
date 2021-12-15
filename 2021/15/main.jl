@@ -1,5 +1,3 @@
-using DataStructures
-
 neighbors(idx::CartesianIndex{2}, A::AbstractMatrix) = filter(
     c -> all((1, 1) .<= Tuple(c) .<= size(A)),
     [idx + d for d in CartesianIndex.(((1, 0), (-1, 0), (0, 1), (0, -1)))]
@@ -7,10 +5,10 @@ neighbors(idx::CartesianIndex{2}, A::AbstractMatrix) = filter(
 
 function lowest_risk(A::AbstractMatrix, start::CartesianIndex{2}, finish::CartesianIndex{2})
     done = Set{CartesianIndex{2}}()
-    queue = PriorityQueue{CartesianIndex{2}, eltype(A)}()
-    queue[start] = 0
+    queue = Dict(start => eltype(A)(0)) # should be using a priority queue, but hey
     while length(queue) > 0
-        current, risk_current = dequeue_pair!(queue)
+        risk_current, current = findmin(queue)
+        delete!(queue, current)
         current == finish && return risk_current
         push!(done, current)
         for n in neighbors(current, A)

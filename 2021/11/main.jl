@@ -2,13 +2,10 @@ function lines_to_int_matrix(lines)
     return vcat((parse.(Int, collect(line))' for line in lines)...)
 end
 
-neighbors(idx::CartesianIndex{2}, A::AbstractMatrix) = [
-    idx + offset for offset in (
-        CartesianIndex(1, 0), CartesianIndex(-1, 0), CartesianIndex(0, 1), CartesianIndex(0, -1),
-        CartesianIndex(1, 1), CartesianIndex(-1, 1), CartesianIndex(1, -1), CartesianIndex(-1, -1),
-    )
-    if idx + offset in CartesianIndices(A)
-]
+neighbors(idx::CartesianIndex{2}, A::AbstractMatrix) = filter(
+    c -> all((1, 1) .<= Tuple(c) .<= size(A)),
+    [idx + d for d in CartesianIndex.(((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, 1), (1, -1), (-1, -1)))]
+)
 
 function evolve!(A)
     A .+= 1

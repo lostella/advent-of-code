@@ -1,7 +1,7 @@
-neighbors(idx::CartesianIndex{2}, A::AbstractMatrix) = [
-    idx + offset for offset in (CartesianIndex(1, 0), CartesianIndex(-1, 0), CartesianIndex(0, 1), CartesianIndex(0, -1))
-    if idx + offset in CartesianIndices(A)
-]
+neighbors(idx::CartesianIndex{2}, A::AbstractMatrix) = filter(
+    c -> all((1, 1) .<= Tuple(c) .<= size(A)),
+    [idx + d for d in CartesianIndex.(((1, 0), (-1, 0), (0, 1), (0, -1)))]
+)
 
 function find_local_minima(A::AbstractArray{T,N}) where {T,N}
     local_minima = CartesianIndex{N}[]

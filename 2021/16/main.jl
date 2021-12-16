@@ -52,16 +52,20 @@ function parse_packet(bits)
     return Packet(version, type_id, payload), rest
 end
 
-parse_packet(hex::String) = parse_packet(hex2bits(hex))[1]
+function parse_packet(hex::String)
+    packet, rest = parse_packet(hex2bits(hex))
+    @assert all(iszero.(rest))
+    return packet
+end
 
 evaluate_packet(p::Packet{0}) = sum(evaluate_packet.(p.payload))
 evaluate_packet(p::Packet{1}) = prod(evaluate_packet.(p.payload))
 evaluate_packet(p::Packet{2}) = minimum(evaluate_packet.(p.payload))
 evaluate_packet(p::Packet{3}) = maximum(evaluate_packet.(p.payload))
 evaluate_packet(p::Packet{4}) = p.payload
-evaluate_packet(p::Packet{5}) = evaluate_packet(p.payload[1]) > evaluate_packet(p.payload[2]) ? 1 : 0
-evaluate_packet(p::Packet{6}) = evaluate_packet(p.payload[1]) < evaluate_packet(p.payload[2]) ? 1 : 0
-evaluate_packet(p::Packet{7}) = evaluate_packet(p.payload[1]) == evaluate_packet(p.payload[2]) ? 1 : 0
+evaluate_packet(p::Packet{5}) = >(evaluate_packet.(p.payload)...) |> Int
+evaluate_packet(p::Packet{6}) = <(evaluate_packet.(p.payload)...) |> Int
+evaluate_packet(p::Packet{7}) = ==(evaluate_packet.(p.payload)...) |> Int
 
 function main(input_path)
     line = only(eachline(input_path))

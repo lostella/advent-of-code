@@ -28,7 +28,7 @@ end
 function main(input_path)
     xmin, xmax, ymin, ymax = parse_input(only(eachline(input_path)))
     println(max_height(ymin, ymax))
-    candidate_velocities = Iterators.product(1:xmax, ymin:max(abs(ymin)-1, abs(ymax)))
+    candidate_velocities = Iterators.product(sign(xmax)*(1:abs(xmax)), ymin:max(abs(ymin)-1, abs(ymax)))
     initial_velocities = [v for v in candidate_velocities if simulate(v..., xmin, xmax, ymin, ymax) !== nothing]
     println(length(initial_velocities))
 end

@@ -4,11 +4,9 @@ function parse_input(line)
     return parse.(Int, (mx.captures[1], mx.captures[2], my.captures[1], my.captures[2]))
 end
 
-triangular(n) = div(n * (n + 1), 2)
-
 function max_height(ymin, ymax)
-    @assert !(ymin <= 0 <= ymax) "the problem is unbounded"
-    triangular(max(abs(ymin)-1, abs(ymax)))
+    @assert ymax < 0 "target is assumed to be in the negative y-semiaxis, got ymax=$(ymax)"
+    return div(ymin * (ymin + 1), 2)
 end
 
 function velocity_ranges(xmin, xmax, ymin, ymax)
@@ -26,7 +24,7 @@ function simulate(vx, vy, xmin, xmax, ymin, ymax)
         py += vy
         (xmin <= px <= xmax) && (ymin <= py <= ymax) && return (px, py)
         (py < ymin || px > xmax) && return nothing
-        vx = sign(vx) * (abs(vx) - 1)
+        vx = vx == 0 ? 0 : (vx > 0 ? vx - 1 : vx + 1)
         vy -= 1
     end
 end

@@ -8,18 +8,16 @@ end
 
 Packet(version, type_id, payload) = Packet{type_id, typeof(payload)}(version, payload)
 
-version_sum(p::Packet{4}) = p.version
-version_sum(p::Packet{type_id, <:Tuple}) where type_id = p.version + sum(version_sum.(p.payload))
-
 function parse_value(bits)
-    value_bits = Bool[]
-    rest = bits
+    value = 0
+    k = 0
     while true
-        block, rest = rest[1:5], rest[6:end]
-        append!(value_bits, block[2:5])
-        !block[1] && break
+        stop = !bits[k+1]
+        value = value * 16 + bits2int(bits[k+2:k+5])
+        k += 5
+        stop && break
     end
-    return bits2int(value_bits), rest
+    return value, bits[k+1:end]
 end
 
 function parse_subpackets(bits)
@@ -57,6 +55,9 @@ function parse_packet(hex::String)
     @assert all(iszero.(rest))
     return packet
 end
+
+version_sum(p::Packet{4}) = p.version
+version_sum(p::Packet{type_id, <:Tuple}) where type_id = p.version + sum(version_sum.(p.payload))
 
 evaluate_packet(p::Packet{0}) = sum(evaluate_packet.(p.payload))
 evaluate_packet(p::Packet{1}) = prod(evaluate_packet.(p.payload))
